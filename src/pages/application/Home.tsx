@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiCpu } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import RecentScape from "./scapes/components/RecentScape";
 
 const Home = () => {
@@ -21,7 +21,7 @@ const Home = () => {
     },
   ];
 
-  const [selectedScapeType, setSelectedScapeType] = useState();
+  const [selectedScapeType, setSelectedScapeType] = useState<number | undefined>(undefined);
 
   const handleButtonClick = () => {
     navigate("/create-scape");

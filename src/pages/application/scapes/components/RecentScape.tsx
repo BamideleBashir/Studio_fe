@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react'
 import { ScapeApi } from '../../../../api/scapeApi';
@@ -6,6 +7,8 @@ import { Link } from 'react-router-dom';
 const RecentScape = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any[]>([]);
+  
+  console.log(data, loading);
 
   const fetchData = () => {
     setLoading(true);

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { FaMinus, FaPlus, FaTablet } from "react-icons/fa6";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
+import { FaMinus, FaPlus } from "react-icons/fa6";
 import { IScapeState } from "../../../../types";
-import * as Switch from "@radix-ui/react-switch";
 
 type Props = {
   scapeState: IScapeState;
