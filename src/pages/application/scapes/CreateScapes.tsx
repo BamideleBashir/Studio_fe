@@ -8,9 +8,9 @@ import SuccessTab from "./tabs/SuccessTab";
 
 const CreateScapes = () => {
   const [scapeState, setScapeState] = useState<IScapeState>({
-    scapeTitle: "sample scape",
-    about: "lorem ipsum",
-    category: "lorem",
+    scapeTitle: "",
+    about: "",
+    category: "",
     objectClass: [],
     objectApplication: [],
     view: {

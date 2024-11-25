@@ -63,6 +63,12 @@ const SpatialDomain = ({ scapeState, setScapeState }: Props) => {
     });
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleAddDomain();
+    }
+  }
+
   return (
     <div>
       <div className="space-y-6">
@@ -104,6 +110,7 @@ const SpatialDomain = ({ scapeState, setScapeState }: Props) => {
                     type="text"
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     placeholder="Search public spatial domains"
                     className="w-full p-2 pr-10 bg-gray-50 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
@@ -120,7 +127,7 @@ const SpatialDomain = ({ scapeState, setScapeState }: Props) => {
                   {value.domains.map((domain) => (
                     <div
                       key={domain}
-                      className="flex items-center justify-between p-2 bg-white rounded-lg border"
+                      className="flex items-center justify-between p-2 bg-[#e2edf8] rounded-lg border"
                     >
                       <span className="text-sm">{domain}</span>
                       <button

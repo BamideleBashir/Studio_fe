@@ -67,3 +67,47 @@ export interface IScapeState {
   scapeIcon: string;
   scapeOwnershipLabel: ScapeOwnershipLabel;
 }
+
+interface SpatialDomain {
+  enabled: boolean;
+  domains: string[];
+  limitPinningToDomain: boolean;
+}
+
+interface SearchEngine {
+  enabled: boolean;
+  keywords: string[];
+}
+
+interface ScapeOwnershipLabel {
+  ownerName: string;
+  ownerUrl: string;
+}
+
+interface Template {
+  isTemplate: boolean;
+}
+
+interface View {
+  level: string;
+  users: string[];
+  _id: string;
+}
+
+export interface IScape {
+  spatialDomain: SpatialDomain;
+  searchEngine: SearchEngine;
+  scapeOwnershipLabel: ScapeOwnershipLabel;
+  template: Template;
+  _id: string;
+  owner: string;
+  scapeTitle: string;
+  about: string;
+  category: string;
+  objectClass: string[];
+  objectApplication: string[];
+  view: View;
+  pinComments: View;
+  pinObjects: View;
+  scapeIcon: string;
+}

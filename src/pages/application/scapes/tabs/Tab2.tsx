@@ -34,7 +34,7 @@ const Tab2 = ({ scapeState, setScapeState, setSelectedTab }: Props) => {
         users: [],
       },
     });
-  }
+  };
 
   const onCommentChange = (value: string) => {
     setScapeState({
@@ -44,7 +44,7 @@ const Tab2 = ({ scapeState, setScapeState, setSelectedTab }: Props) => {
         users: [],
       },
     });
-  }
+  };
 
   const onObjectChange = (value: string) => {
     setScapeState({
@@ -54,12 +54,12 @@ const Tab2 = ({ scapeState, setScapeState, setSelectedTab }: Props) => {
         users: [],
       },
     });
-  }
+  };
 
   const handleButtonClick = () => {
     console.log(scapeState);
     setSelectedTab("tab3");
-  }
+  };
 
   return (
     <div className="p-4 mb-8">
@@ -75,7 +75,7 @@ const Tab2 = ({ scapeState, setScapeState, setSelectedTab }: Props) => {
                 type="radio"
                 name="viewPermission"
                 value="public"
-                checked={scapeState.view.level === 'public'}
+                checked={scapeState.view.level === "public"}
                 onChange={(e) => onViewChange(e.target.value)}
                 className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
               />
@@ -87,11 +87,12 @@ const Tab2 = ({ scapeState, setScapeState, setSelectedTab }: Props) => {
                 type="radio"
                 name="viewPermission"
                 value="selected"
-                checked={scapeState.view.level === 'selected'}
+                disabled
+                checked={scapeState.view.level === "selected"}
                 onChange={(e) => onViewChange(e.target.value)}
                 className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
               />
-              <span className="ml-2 text-sm">Selected</span>
+              <span className="ml-2 text-sm">Selected Users</span>
             </label>
 
             <label className="flex items-center">
@@ -99,7 +100,7 @@ const Tab2 = ({ scapeState, setScapeState, setSelectedTab }: Props) => {
                 type="radio"
                 name="viewPermission"
                 value="admin"
-                checked={scapeState.view.level === 'admin'}
+                checked={scapeState.view.level === "admin"}
                 onChange={(e) => onViewChange(e.target.value)}
                 className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
               />
@@ -119,7 +120,7 @@ const Tab2 = ({ scapeState, setScapeState, setSelectedTab }: Props) => {
                 type="radio"
                 name="commentPermission"
                 value="public"
-                checked={scapeState.pinComments.level === 'public'}
+                checked={scapeState.pinComments.level === "public"}
                 onChange={(e) => onCommentChange(e.target.value)}
                 className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
               />
@@ -131,11 +132,12 @@ const Tab2 = ({ scapeState, setScapeState, setSelectedTab }: Props) => {
                 type="radio"
                 name="commentPermission"
                 value="selected"
-                checked={scapeState.pinComments.level === 'selected'}
+                disabled
+                checked={scapeState.pinComments.level === "selected"}
                 onChange={(e) => onCommentChange(e.target.value)}
                 className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
               />
-              <span className="ml-2 text-sm">Selected</span>
+              <span className="ml-2 text-sm">Selected Users</span>
             </label>
 
             <label className="flex items-center">
@@ -143,7 +145,7 @@ const Tab2 = ({ scapeState, setScapeState, setSelectedTab }: Props) => {
                 type="radio"
                 name="commentPermission"
                 value="admin"
-                checked={scapeState.pinComments.level === 'admin'}
+                checked={scapeState.pinComments.level === "admin"}
                 onChange={(e) => onCommentChange(e.target.value)}
                 className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
               />
@@ -163,7 +165,7 @@ const Tab2 = ({ scapeState, setScapeState, setSelectedTab }: Props) => {
                 type="radio"
                 name="objectPermission"
                 value="public"
-                checked={scapeState.pinObjects.level === 'public'}
+                checked={scapeState.pinObjects.level === "public"}
                 onChange={(e) => onObjectChange(e.target.value)}
                 className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
               />
@@ -175,11 +177,12 @@ const Tab2 = ({ scapeState, setScapeState, setSelectedTab }: Props) => {
                 type="radio"
                 name="objectPermission"
                 value="selected"
-                checked={scapeState.pinObjects.level === 'selected'}
+                disabled
+                checked={scapeState.pinObjects.level === "selected"}
                 onChange={(e) => onObjectChange(e.target.value)}
                 className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
               />
-              <span className="ml-2 text-sm">Selected</span>
+              <span className="ml-2 text-sm">Selected Users</span>
             </label>
 
             <label className="flex items-center">
@@ -187,7 +190,7 @@ const Tab2 = ({ scapeState, setScapeState, setSelectedTab }: Props) => {
                 type="radio"
                 name="objectPermission"
                 value="admin"
-                checked={scapeState.pinObjects.level === 'admin'}
+                checked={scapeState.pinObjects.level === "admin"}
                 onChange={(e) => onObjectChange(e.target.value)}
                 className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
               />

@@ -71,6 +71,7 @@ const Tab1 = ({ scapeState, setScapeState, setSelectedTab, selectedObjects, setS
           value={scapeState.scapeTitle}
           onChange={handleChange}
           className="input"
+          placeholder="Enter the title of your scape"
         />
       </div>
 
@@ -89,6 +90,7 @@ const Tab1 = ({ scapeState, setScapeState, setSelectedTab, selectedObjects, setS
             })
           }
           className="input"
+          placeholder="Enter a brief description of your scape"
         />
       </div>
 

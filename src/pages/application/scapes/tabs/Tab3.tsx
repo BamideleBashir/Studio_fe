@@ -15,9 +15,7 @@ const Tab3 = ({ scapeState, setScapeState, setSelectedTab, selectedObjects }: Pr
 
   const handleSubmitClick = () => {
     console.log(scapeState);
-    // return
-    // setSelectedTab("tab4");
-
+    
     ScapeApi.create(scapeState)
       .then((response) => {
         console.log(response);
@@ -26,7 +24,7 @@ const Tab3 = ({ scapeState, setScapeState, setSelectedTab, selectedObjects }: Pr
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Failed to create scape");
+        toast.error(error.response.data.msg || "Failed to create scape");
       });
   };
 

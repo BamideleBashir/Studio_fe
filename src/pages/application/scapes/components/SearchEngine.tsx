@@ -90,7 +90,7 @@ const SearchEngine = ({ scapeState, setScapeState }: Props) => {
               {value.keyword.map((keyword: any) => (
                 <div
                   key={keyword}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full"
+                  className="flex items-center gap-2 px-3 py-1.5 bg-[#e2edf8] rounded-full"
                 >
                   <span className="text-sm">{keyword}</span>
                   <button

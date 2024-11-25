@@ -34,7 +34,7 @@ const Home = () => {
         <p>Create Scapes, map-based virtual worlds for real world activities</p>
       </div>
 
-      <div className="my-10">
+      <div className="my-10 mb-3">
         <RecentScape />
       </div>
 
