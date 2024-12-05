@@ -10,16 +10,21 @@ type Props = {
   selectedObjects: any[];
 };
 
-const Tab3 = ({ scapeState, setScapeState, setSelectedTab, selectedObjects }: Props) => {
+const Tab3 = ({
+  scapeState,
+  setScapeState,
+  setSelectedTab,
+  selectedObjects,
+}: Props) => {
   console.log(selectedObjects);
 
   const handleSubmitClick = () => {
     console.log(scapeState);
-    
+
     ScapeApi.create(scapeState)
       .then((response) => {
         console.log(response);
-        toast.success("Scape created successfully");    
+        toast.success("Scape created successfully");
         setSelectedTab("tab4");
       })
       .catch((error) => {
@@ -27,8 +32,6 @@ const Tab3 = ({ scapeState, setScapeState, setSelectedTab, selectedObjects }: Pr
         toast.error(error.response.data.msg || "Failed to create scape");
       });
   };
-
-
 
   const handleChange =
     (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {

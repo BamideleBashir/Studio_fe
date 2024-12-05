@@ -110,6 +110,7 @@ const Tab1 = ({ scapeState, setScapeState, setSelectedTab, selectedObjects, setS
           }
           className="input"
         >
+          <option value="">Select a category</option>
           {CategoriesList.map((category) => (
             <option key={category} value={category}>
               {category}

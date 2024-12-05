@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import FullLogo from "../../assets/logo/full_logo.png";
+import FullLogo from "../../assets/logo/image.png";
 import AuthApi from "../../api/authApi";
 import { useDispatch } from "react-redux";
 import { login } from "../../reducers/authSlice";
@@ -57,10 +57,10 @@ const Signin = () => {
     <div>
       <div className="p-4 px-8 max-w-[500px] mx-auto mt-20 rounded-lg shadow mb-20">
         <div className="text-center">
-          <img src={FullLogo} alt="Logo" className="h-20 mx-auto" />
+          <img src={FullLogo} alt="Logo" className="h-28 mx-auto" />
         </div>
 
-        <h1 className="text-2xl font-semibold mb-6 mt-10">
+        <h1 className="text-2xl font-semibold mb-6 mt-8">
           Login with your ByteId
         </h1>
 
