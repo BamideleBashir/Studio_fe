@@ -12,16 +12,26 @@ type Props = {
 };
 
 const CategoriesList = [
-  "Transportation",
-  "Education",
-  "Health",
-  "Finance",
-  "Agriculture",
-  "Tourism",
-  "Real Estate",
-  "Sports",
-  "Entertainment",
-  "Others",
+  "Home",
+  "Country",
+  "City",
+  "Town",
+  "Residential Areas",
+  "Commercial Districts",
+  "Industrial Parks",
+  "Educational Campuses",
+  "Recreational Parks",
+  "Transportation Hubs",
+  "Shopping Malls",
+  "Rural Farms",
+  "Suburban Neighborhoods",
+  "Historical Landmarks",
+  "Tourist Destinations",
+  "Beaches and Coastal Areas",
+  "Forests and Natural Reserves",
+  "Military Bases",
+  "Airports",
+  "Others"
 ];
 
 const Tab1 = ({ scapeState, setScapeState, setSelectedTab, selectedObjects, setSelectedObjects  }: Props) => {

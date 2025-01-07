@@ -90,7 +90,11 @@ const AddObjects = ({ scapeState, setScapeState, selectedObjects, setSelectedObj
 
   return (
     <div>
-      <h4 className="font-bold">Add Object</h4>
+      <h4 className="font-bold">Add Objects</h4>
+
+      <p className="text-sm text-gray-600">
+        Search for objects to add to your scape
+      </p>
 
       <div className="max-h-80 overflow-y-auto">
         <div className="mt-4 flex items-center bg-[#f4f5f7] p-4 rounded-lg">
