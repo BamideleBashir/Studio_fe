@@ -68,46 +68,68 @@ export interface IScapeState {
   scapeOwnershipLabel: ScapeOwnershipLabel;
 }
 
-interface SpatialDomain {
-  enabled: boolean;
-  domains: string[];
-  limitPinningToDomain: boolean;
-}
 
-interface SearchEngine {
-  enabled: boolean;
-  keywords: string[];
-}
 
 interface ScapeOwnershipLabel {
   ownerName: string;
   ownerUrl: string;
 }
 
-interface Template {
-  isTemplate: boolean;
+
+
+export interface ScapeOwner {
+  name?: string;
+  link?: string;
 }
 
-interface View {
-  level: string;
-  users: string[];
+interface INucleus {
   _id: string;
+  userId: string;
+  primaryNature: string;
+  category: string;
+  parentTemplate: string;
+  title: string;
+  description: string;
+  mobilityType: string;
+  icon: {
+    url: string;
+    publicId: string;
+  }
+}
+
+export interface ScapeObject {
+  nucleus: INucleus;
+  objectFunctions: string[];
+  pinAccess?: 'public' | 'private' | 'admins';
+  users?: string[];
+}
+
+export interface IImage {
+  url: string;
+  publicId: string; 
 }
 
 export interface IScape {
-  spatialDomain: SpatialDomain;
-  searchEngine: SearchEngine;
-  scapeOwnershipLabel: ScapeOwnershipLabel;
-  template: Template;
   _id: string;
-  owner: string;
-  scapeTitle: string;
-  about: string;
+  title: string;
+  description: string;
   category: string;
-  objectClass: string[];
-  objectApplication: string[];
-  view: View;
-  pinComments: View;
-  pinObjects: View;
-  scapeIcon: string;
+  owner?: ScapeOwner;
+  enableSearchEngine: boolean;
+  keywords: string[];
+  viewingAccess: 'public' | 'private' | 'admins' | string;
+  commentAccess: 'disabled' | 'public' | 'private' | 'admins' | string;
+  admins: string[];
+  objects: ScapeObject[];
+  geometry: {
+    type: 'Point' | 'LineString' | 'Polygon' | 'MultiPoint' | 'MultiLineString' | 'MultiPolygon' | 'GeometryCollection';
+    coordinates: number[][];
+  },
+  icon: IImage;
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+  }
 }

@@ -22,7 +22,7 @@ const SearchNucleus = () => {
     console.log(searchInput);
 
     setLoading(true);
-    NucleusApi.searchNucleus(searchInput)
+    NucleusApi.getNucleus(searchInput)
       .then((res) => {
         console.log(res);
         setSearchResults(res.data);

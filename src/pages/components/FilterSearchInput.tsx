@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from "react";
-import { NucleusApi } from "../../../api/nucleusApi";
+import { IoIosSearch } from "react-icons/io";
+import { NucleusApi } from "../../api/nucleusApi";
 
 type FilterSearchInputProps = {
   setPrimaryObject: (primaryObject: string) => void;
@@ -18,11 +19,18 @@ const FilterSearchInput = ({
   const handleSearch = () => {
     console.log(searchInput);
 
+    if (searchInput === "" || searchInput === null || searchInput === undefined) {
+      setSearchResults([]);
+      return;
+    }
+
     setLoading(true);
-    NucleusApi.getNucleus(searchInput)
+    NucleusApi.getNucleus({
+      searchQuery: searchInput,
+    })
       .then((res) => {
         console.log(res);
-        setSearchResults(res.data);
+        setSearchResults(res.docs);
         setLoading(false);
       })
       .catch((err) => {
@@ -47,7 +55,7 @@ const FilterSearchInput = ({
   // }, [searchInput]);
 
   const handleSelect = (result: any) => {
-    setPrimaryObject(result._id);
+    setPrimaryObject(result);
     setSearchInput(result.title)
     setSearchResults([]);
   };
@@ -65,15 +73,42 @@ const FilterSearchInput = ({
         value={searchInput}
         // onChange={(e) => setSearchInput(e.target.value)}
         onChange={handleSearchInputChange}
+        placeholder="Search for a primary object"
       />
 
 
       <div>
         {!loading && searchResults.map((result) => (
-          <div key={result.id} onClick={() => handleSelect(result)}
-            className="p-2 cursor-pointer hover:bg-gray-100 bg-gray-50"
+          <div
+            key={result._id}
+            className="mt-4 flex justify-between items-center bg-[#f4f5f7] p-4 rounded-lg cursor-pointer"
+            onClick={() => handleSelect(result)}
           >
-            {result.title}
+            <div className="flex items-center">
+              <img
+                className="object-cover mr-2 w-10 h-10 rounded-lg"
+                src={result.icon.url}
+                alt=""
+              />
+
+              <div>
+                <h4 className="font-bold">{result.title}</h4>
+                <p className="text-sm text-gray-600">
+                  {result.objectDescription}
+                </p>
+                <div>
+                  <p className="text-sm text-gray-600">
+                    Category: {result.category}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="hidden p-2 bg-white rounded-lg">
+                <IoIosSearch className="text-2xl text-blue-500 cursor-pointer" />
+              </div>
+            </div>
           </div>
         ))}
       </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface AuthState {
@@ -15,6 +16,7 @@ const getTokenFromLocalStorage = () => {
       return null;
     }
   } catch (error) {
+    console.log(error);
     return null;
   }
 }

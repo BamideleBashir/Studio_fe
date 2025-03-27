@@ -10,6 +10,9 @@ export default {
         bg: {
           DEFAULT: "#f3f3f1",
         },
+        blue: {
+          DEFAULT: "#256FFF",
+        },
       },
     },
   },

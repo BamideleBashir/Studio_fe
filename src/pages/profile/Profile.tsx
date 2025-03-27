@@ -10,7 +10,9 @@ type IUser = {
   id: string;
   lastName: string;
   phoneNumber: string;
-  photo: string;
+  photo: {
+    url: string;
+  };
 }
 
 const Profile = () => {
@@ -39,7 +41,7 @@ const Profile = () => {
       <div>
         <img
           className='w-32 h-32 rounded-full mb-10 text-center m-auto'
-          src={userData.photo} alt="profile" />
+          src={userData.photo?.url} alt="profile" />
 
         {/* <input type="file" id="photo" name="photo" onChange={handleChange} /> */}
       </div>

@@ -6,8 +6,9 @@ import Signin from "./pages/auth/Signin";
 import AppLayout from "./pages/application/components/AppLayout";
 import Home from "./pages/application/Home";
 import Profile from "./pages/profile/Profile";
-import DigitizeObject from "./pages/application/digitize/DigitizeObject";
-import CreateScapes from "./pages/application/scapes/CreateScapes";
+// import CreateScapes from "./pages/application/scapes/CreateScapes";
+import CreateScape from "./pages/CreateScape";
+import ScapeDetails from "./pages/ScapeDetails";
 
 const App = () => {
   return (
@@ -31,12 +32,11 @@ const App = () => {
 
           <Route path="/" element={<AppLayout />}>
             <Route path="home" element={<Home />} />
-            <Route path="create-scape" element={<CreateScapes />} />
-            <Route path="digitize/:object" element={<DigitizeObject />} />
+            <Route path="create-scape" element={<CreateScape />} />
+            <Route path="scape-details/:id" element={<ScapeDetails />} />
 
             <Route path="profile" element={<Profile />} />
           </Route>
-
         </Routes>
       </BrowserRouter>
     </div>

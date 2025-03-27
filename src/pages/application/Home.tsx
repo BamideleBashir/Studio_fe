@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiCpu } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import RecentScape from "./scapes/components/RecentScape";
+import Logo from '../../assets/logo/image.png'
 
 const Home = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const Home = () => {
       id: 2,
       title: "Continuous",
       description:
-        "Contain nondiscrete objects eg rainfall, solar radiation, air quality etc",
+        "Contain non discrete objects eg rainfall, solar radiation, air quality etc",
     },
   ];
 
@@ -28,9 +29,9 @@ const Home = () => {
   };
 
   return (
-    <div className="px-6">
+    <div className="px-6 mb-10">
       <div className="text-center">
-        <h2 className="text-3xl font-bold">Studio</h2>
+        <img src={Logo} alt="Logo" className="w-auto h-32 mx-auto" />
         <p>Create Scapes, map-based virtual worlds for real world activities</p>
       </div>
 
@@ -39,7 +40,7 @@ const Home = () => {
       </div>
 
       <div>
-        <h3 className="font-medium text-xl mt-4">Create New Scape</h3>
+        <h3 className="font-medium text-xl mt-4 mb-2">Create New Scape</h3>
 
         <div className="bg-[#FFF3EF] p-4 rounded-3xl">
           <div className="flex gap-4 items-center">
@@ -47,7 +48,7 @@ const Home = () => {
               <FiCpu size={30} />
             </div>
             <div>
-              <p className="text-lg">From Scratch</p>
+              <p className="text-lg font-semibold">From Scratch</p>
               <p>Start with a blank canvas</p>
             </div>
           </div>

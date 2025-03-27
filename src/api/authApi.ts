@@ -7,7 +7,7 @@ const AuthApi = {
     return response.data;
   },
   register: async (body: any) => {
-    const response = await api.post('/auth/register', body);
+    const response = await api.post('/auth/signup', body);
     return response.data;
   },
   logout: async () => {

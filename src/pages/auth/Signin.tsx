@@ -29,15 +29,14 @@ const Signin = () => {
     setLoading(true);
     setError("");
 
-    // navigate("/home");
-
     AuthApi.login(signinData.email, signinData.password)
       .then((res) => {
         setLoading(false);
+
         console.log(res);
         const payload = {
-          token: res.data.token,
-          user: res.data,
+          token: res.token,
+          user: res.user,
         };
 
         dispatch(login(payload));
@@ -47,7 +46,7 @@ const Signin = () => {
         setLoading(false);
         console.log(err);
         setError(
-          err.response.data.msg ||
+          err.response.message ||
             "Something went wrong. Please try again later."
         );
       });

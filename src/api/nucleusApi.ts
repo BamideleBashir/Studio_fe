@@ -2,13 +2,13 @@
 import api from './apiConfig'
 
 export const NucleusApi = {
-  getNucleus: async () => {
-    const response = await api.get('/nucleus');
+  getNucleus: async (query?: any) => {
+    const response = await api.get('/nucleus', { params: query });
     return response.data;
   },
-  // api/v1/nucleus/search/name?searchTerm=sample
-  searchNucleus: async (searchTerm: string) => {
-    const response = await api.get(`/nucleus/search/name?searchTerm=${searchTerm}`);
+
+  getNucleusById: async (id: string) => {
+    const response = await api.get(`/nucleus/${id}`);
     return response.data;
   },
   
@@ -24,9 +24,4 @@ export const NucleusApi = {
     const response = await api.delete(`/nucleus/${id}`);
     return response.data;
   },
-
-  getNucleusById: async (id: string) => {
-    const response = await api.get(`/nucleus/${id}`);
-    return response.data;
-  }
 };
