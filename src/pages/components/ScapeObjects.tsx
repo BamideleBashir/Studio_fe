@@ -16,7 +16,7 @@ interface Attribute {
   label: string;
 }
 
-interface IObjectFunction {
+export interface IObjectFunction {
   _id: string;
   attributes: Attribute[]; // Array of Attribute objects
   category: string;

@@ -1,28 +1,33 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { IScape } from "../types";
-import ScapeObjectFunctionList from "./sections/ScapeObjectFunctionList";
 import { ScapeApi } from "../api/scapeApi";
 import ScapeObjectList from "./sections/ScapeObjectList";
+import ScapeActivityList from "./sections/ScapeActivityList";
+import ScapeLightObjectList from "./sections/ScapeLightObjectList";
 
 const ScapeDetails = () => {
   const { id } = useParams<string>();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<IScape | null>(null);
 
-  useEffect(() => {
+  const fetchScape = async () => {
     if (!id) return;
 
     ScapeApi.getScapeById(id)
-      .then((res) => {
+     .then((res) => {
         console.log(res);
         setData(res.data);
         setLoading(false);
       })
-      .catch((err) => {
+     .catch((err) => {
         console.log(err);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchScape();
   }, [id]);
 
   if (loading) {
@@ -136,12 +141,15 @@ const ScapeDetails = () => {
         )}
 
         {id && data.objects && data.objects.length > 0 && (
-          <ScapeObjectList objects={data.objects} />
+          <ScapeObjectList scapeId={id} objects={data.objects} fetchScape={fetchScape} />
         )}
 
-        {/* Object Functions */}
         {id && data.objects && data.objects.length > 0 && (
-          <ScapeObjectFunctionList id={id} objects={data.objects} />
+          <ScapeActivityList scapeId={id} activities={data.activities} fetchScape={fetchScape} />
+        )}
+
+        {id && data.objects && data.objects.length > 0 && (
+          <ScapeLightObjectList scapeId={id} fetchScape={fetchScape} />
         )}
       </div>
     </div>

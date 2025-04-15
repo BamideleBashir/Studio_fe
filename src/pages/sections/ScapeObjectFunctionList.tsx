@@ -26,65 +26,6 @@ const ScapeObjectFunctionList = ({
   id: string;
   objects: any[];
 }) => {
-  const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!objects || objects.length === 0) {
-      setLoading(false);
-      return;
-    }
-
-    const fetchObjectFunctions = async () => {
-      try {
-        const objectFunctionsPromises = objects.map(async (object) => {
-          if (object.objectFunctions && object.objectFunctions.length > 0) {
-            const functionPromises = object.objectFunctions.map(
-              (functionId: string) =>
-                ObjectFunctionApi.getObjectFunctionById(functionId)
-                  .then((res) => res.data)
-                  .catch((err) => {
-                    console.log(err);
-                    return null;
-                  })
-            );
-
-            const functions = await Promise.all(functionPromises);
-            return functions.filter((func) => func !== null);
-          }
-          return [];
-        });
-
-        const allObjectFunctions = await Promise.all(objectFunctionsPromises);
-        const flattenedFunctions = allObjectFunctions.flat();
-
-        setData(flattenedFunctions);
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-        setLoading(false);
-      }
-    };
-
-    fetchObjectFunctions();
-  }, [objects]);
-
-  if (loading) {
-    return (
-      <p className="text-gray-600 text-center my-4">
-        Loading object functions...
-      </p>
-    );
-  }
-
-  if (data.length === 0) {
-    return (
-      <p className="text-gray-600 text-center my-4">
-        No object functions found
-      </p>
-    );
-  }
-
   return (
     <div className="mt-10 hidden">
       <h3 className="text-2xl font-semibold text-black mb-2 border-b">
@@ -92,7 +33,7 @@ const ScapeObjectFunctionList = ({
       </h3>
 
       <div className="grid grid-cols-1 gap-4">
-        {data.map((item: ICreateFunctionOrActivity, index) => (
+        {objects && objects.length > 0 && objects.map((item: ICreateFunctionOrActivity, index) => (
           <div
             key={`${item.title}-${index}`}
             className="bg-white rounded-lg border-b"

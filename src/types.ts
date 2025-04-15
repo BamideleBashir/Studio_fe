@@ -109,6 +109,16 @@ export interface IImage {
   publicId: string; 
 }
 
+interface IActivityResponse {
+  icon: IImage;
+  _id: string;
+  user: string;
+  title: string;
+  category: string;
+  description: string;
+  access: string;
+  createdAt: string; // Assuming ISO 8601 format
+}
 export interface IScape {
   _id: string;
   title: string;
@@ -131,5 +141,9 @@ export interface IScape {
     lastName: string;
     email: string;
     phoneNumber: string;
-  }
+  },
+  activities: {
+    activity: IActivityResponse;
+    permission: string
+  }[]
 }

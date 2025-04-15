@@ -9,7 +9,7 @@ export interface ScapeOwner {
   link?: string;
 }
 
-interface INucleus {
+export interface INucleus {
   _id: string;
   userId: string;
   primaryNature: string;
