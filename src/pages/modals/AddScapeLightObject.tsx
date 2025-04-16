@@ -52,6 +52,7 @@ const AddScapeLightObject = ({
         toast.success("Object added successfully");
         setLoading(false);
         fetchScape();
+        setIsModalOpen(false);
       })
       .catch((err) => {
         toast.error(err.response.data.message || "Something went wrong");
