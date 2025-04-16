@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
-import ObjectFunctionApi from "../../api/objectFunctionApi";
 
 export type IProperty = {
   value: string;

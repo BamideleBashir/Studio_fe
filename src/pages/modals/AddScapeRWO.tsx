@@ -47,10 +47,12 @@ const AddScapeRWO = ({
       .then((res) => {
         console.log("res: function", res);
         setObjectFunctions(res.data);
+        setLoading(false);
       })
       .catch((err) => {
         console.log("err: function", err);
         toast.error("Error fetching object functions");
+        toast.error(err.response.data.message || "Something went wrong");
       });
   };
 
@@ -134,7 +136,7 @@ const AddScapeRWO = ({
                 <input
                   type="text"
                   value={selectedNucleus?.title}
-                  disabled
+                  disabled={loading}
                   className="input !w-full"
                 />
               </div>
