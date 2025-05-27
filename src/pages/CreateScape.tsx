@@ -21,13 +21,13 @@ export interface INucleus {
   icon: {
     url: string;
     publicId: string;
-  }
+  };
 }
 
 export interface ScapeObject {
   nucleus: INucleus;
   objectFunctions: string[];
-  pinAccess?: 'public' | 'private' | 'admins';
+  pinAccess?: "public" | "private" | "admins";
   users?: string[];
 }
 
@@ -35,41 +35,50 @@ export interface IScapeFormState {
   title: string;
   description: string;
   category: string;
+  canPinHumans: null | boolean;
   owner?: ScapeOwner;
   enableSearchEngine: boolean;
   keywords: string[];
-  viewingAccess: 'public' | 'private' | 'admins' | string;
-  commentAccess: 'disabled' | 'public' | 'private' | 'admins' | string;
+  viewingAccess: "public" | "private" | "admins" | string;
+  commentAccess: "disabled" | "public" | "private" | "admins" | string;
   admins: string[];
   objects: ScapeObject[];
   geometry: {
-    type: 'Point' | 'LineString' | 'Polygon' | 'MultiPoint' | 'MultiLineString' | 'MultiPolygon' | 'GeometryCollection';
+    type:
+      | "Point"
+      | "LineString"
+      | "Polygon"
+      | "MultiPoint"
+      | "MultiLineString"
+      | "MultiPolygon"
+      | "GeometryCollection";
     coordinates: number[][];
-  }
+  };
 }
 
 const CreateScape = () => {
   const [selectedTab, setSelectedTab] = useState("basic_info");
 
   const [formData, setFormData] = useState<IScapeFormState>({
-    title: '',
-    description: '',
-    category: '',
+    title: "",
+    description: "",
+    category: "",
+    canPinHumans: null,
     owner: {
-      name: '',
-      link: '',
+      name: "",
+      link: "",
     },
     enableSearchEngine: false,
     keywords: [],
-    viewingAccess: 'public',
-    commentAccess: 'disabled',
+    viewingAccess: "public",
+    commentAccess: "disabled",
     admins: [],
     objects: [],
     geometry: {
-      type: 'Polygon',
-      coordinates: [], 
-    }
-  })
+      type: "Polygon",
+      coordinates: [],
+    },
+  });
 
   return (
     <div className="px-4">
@@ -103,7 +112,7 @@ const CreateScape = () => {
         </Tabs.Content>
       </Tabs.Root>
     </div>
-  )
-}
+  );
+};
 
-export default CreateScape
+export default CreateScape;

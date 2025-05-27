@@ -106,7 +106,10 @@ const ScapeBasicInfo = ({ formData, setFormData, setSelectedTab }: Props) => {
             id="owner"
             value={formData.owner?.name || ""}
             onChange={(e) =>
-              setFormData({ ...formData, owner: { ...formData.owner, name: e.target.value } })
+              setFormData({
+                ...formData,
+                owner: { ...formData.owner, name: e.target.value },
+              })
             }
             className="border border-gray-300 rounded-md px-4 py-2"
             placeholder="e.g Apple Inc"
@@ -125,11 +128,42 @@ const ScapeBasicInfo = ({ formData, setFormData, setSelectedTab }: Props) => {
             id="ownerLink"
             value={formData.owner?.link || ""}
             onChange={(e) =>
-              setFormData({ ...formData, owner: { ...formData.owner, link: e.target.value } })
+              setFormData({
+                ...formData,
+                owner: { ...formData.owner, link: e.target.value },
+              })
             }
             className="border border-gray-300 rounded-md px-4 py-2"
             placeholder="e.g www.apple.com"
           />
+        </div>
+
+        {/* canPinHumans */}
+        <div className="flex flex-col gap-2">
+          <label
+            htmlFor="canPinHumans"
+            className="text-sm font-semibold text-black"
+          >
+            Can Pin Humans
+          </label>
+          <p className="text-xs text-gray-500">
+            Allow human to be able to pin themselves to the scape.
+          </p>
+          <select
+            id="canPinHumans"
+            value={formData.canPinHumans?.toString()}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                canPinHumans: e.target.value === "true",
+              })
+            }
+            className="border border-gray-300 rounded-md px-4 py-2"
+          >
+            <option value="">Select an option</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
         </div>
       </div>
       <div className="mt-6">

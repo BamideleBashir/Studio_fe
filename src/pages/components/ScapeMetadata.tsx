@@ -45,6 +45,9 @@ const ScapeMetadata = ({ formData, setFormData, setSelectedTab }: Props) => {
     payload.append("title", formData.title);
     payload.append("description", formData.description);
     payload.append("category", formData.category);
+    if (formData.canPinHumans)
+      payload.append("canPinHumans", formData.canPinHumans.toString());
+
     payload.append("viewingAccess", formData.viewingAccess);
     payload.append("commentAccess", formData.commentAccess);
     payload.append("keywords", formData.keywords.join(","));
@@ -52,27 +55,32 @@ const ScapeMetadata = ({ formData, setFormData, setSelectedTab }: Props) => {
     payload.append("objects", JSON.stringify(objects));
     payload.append("geometry", JSON.stringify(formData.geometry));
     payload.append("owner", JSON.stringify(formData.owner));
-    payload.append("enableSearchEngine", formData.enableSearchEngine.toString());
+    payload.append(
+      "enableSearchEngine",
+      formData.enableSearchEngine.toString()
+    );
 
     if (file) {
       payload.append("file", file);
     } else {
       toast.info("No file selected");
-      return
+      return;
     }
 
     setIsLoading(true);
-    ScapeApi.create(payload).then((res) => {
-      console.log(res);
-      toast.info("Scape Created");
+    ScapeApi.create(payload)
+      .then((res) => {
+        console.log(res);
+        toast.info("Scape Created");
 
-      setIsLoading(false);
-      navigate('/home')
-    }).catch((err) => {
-      console.log(err);
-      setIsLoading(false);
-      toast.error(err.response.data.message || "Something went wrong");
-    })
+        setIsLoading(false);
+        navigate("/home");
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+        toast.error(err.response.data.message || "Something went wrong");
+      });
   };
 
   return (
@@ -158,9 +166,7 @@ const ScapeMetadata = ({ formData, setFormData, setSelectedTab }: Props) => {
           onClick={() => handleComplete()}
           className="bg-primary text-white p-3 rounded-lg block w-full"
         >
-          {
-            isLoading ? "Creating..." : "Create Scape"
-          }
+          {isLoading ? "Creating..." : "Create Scape"}
         </button>
       </div>
 
