@@ -1,4 +1,7 @@
+import { toast } from "react-toastify";
+import { ScapeApi } from "../../api/scapeApi";
 import AddScapeRWO from "../modals/AddScapeRWO";
+import { FaMinusCircle } from "react-icons/fa";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ScapeObject {
@@ -7,6 +10,8 @@ export interface ScapeObject {
   pinAccess?: "public" | "private" | "admins";
   users?: string[];
 }
+
+// removeObjectFromScape
 
 const ScapeObjectList = ({
   objects,
@@ -17,6 +22,25 @@ const ScapeObjectList = ({
   scapeId: string;
   fetchScape: any;
 }) => {
+  const handleRemoveScape = (id: string) => {
+    const confirm = window.confirm(
+      "Are you sure you want to remove this object?"
+    );
+    if (!confirm) {
+      return;
+    }
+
+    ScapeApi.removeObjectFromScape(scapeId, id)
+      .then((res) => {
+        console.log("res: remove object", res);
+        fetchScape();
+      })
+      .catch((err) => {
+        console.log("err: remove object", err);
+        toast.error("Error removing object");
+        toast.error(err.response.data.message || "Something went wrong");
+      });
+  };
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -29,8 +53,15 @@ const ScapeObjectList = ({
         {objects.map((item) => (
           <div
             key={item._id}
-            className="mt-4 flex justify-between items-center bg-[#e9eef1] py-2 p-4 rounded-lg cursor-pointer"
+            className="mt-4 flex justify-between items-center bg-[#e9eef1] py-2 p-4 rounded-lg cursor-pointer relative"
           >
+            <div className="absolute top-3 right-2">
+              <FaMinusCircle
+                onClick={() => handleRemoveScape(item._id)}
+                className="text-red-500 cursor-pointer"
+              />
+            </div>
+
             <div className="flex items-center">
               <img
                 className="object-cover mr-2 w-20 h-20 rounded-lg"
