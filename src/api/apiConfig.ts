@@ -2,7 +2,9 @@
 import axios from "axios";
 
 // export const API_URL_RAW = "https://spaceweb.io";
-export const API_URL_RAW = import.meta.env.VITE_APP_API_URL_RAW || "https://binoculebackend-production.up.railway.app"
+export const API_URL_RAW =
+  import.meta.env.VITE_APP_API_URL_RAW ||
+  "https://binoculebackend-production.up.railway.app";
 
 const api = axios.create({
   baseURL: `${API_URL_RAW}/api/v1`,
@@ -22,5 +24,16 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-export default api;
+// handle response errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/";
+    }
+    return Promise.reject(error);
+  }
+);
 
+export default api;
