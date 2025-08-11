@@ -29,10 +29,10 @@ const ScapeMetadata = ({ formData, setFormData, setSelectedTab }: Props) => {
     console.log("Scape Metadata Complete");
     console.log(formData);
 
-    if (!formData.geometry.coordinates.length) {
-      toast.error("Please add spatial domain");
-      return;
-    }
+    // if (!formData.geometry.coordinates.length) {
+    //   toast.error("Please add spatial domain");
+    //   return;
+    // }
 
     const objects = formData.objects.map((obj) => {
       return {
@@ -53,7 +53,10 @@ const ScapeMetadata = ({ formData, setFormData, setSelectedTab }: Props) => {
     payload.append("keywords", formData.keywords.join(","));
     // payload.append("admins", formData.admins.join(","));
     payload.append("objects", JSON.stringify(objects));
-    payload.append("geometry", JSON.stringify(formData.geometry));
+    // if there is geometry, append it
+    if (formData.geometry.coordinates.length) {
+      payload.append("geometry", JSON.stringify(formData.geometry));
+    }
     payload.append("owner", JSON.stringify(formData.owner));
     payload.append(
       "enableSearchEngine",
