@@ -54,6 +54,10 @@ export interface IScapeFormState {
       | "GeometryCollection";
     coordinates: number[][];
   };
+  position: {
+    type: "Point";
+    coordinates: number[];
+  };
 }
 
 const CreateScape = () => {
@@ -76,6 +80,10 @@ const CreateScape = () => {
     objects: [],
     geometry: {
       type: "Polygon",
+      coordinates: [],
+    },
+    position: {
+      type: "Point",
       coordinates: [],
     },
   });

@@ -47,6 +47,11 @@ type IGeometry = {
   coordinates: number[][][];
 };
 
+// type Position = {
+//   type: "Point";
+//   coordinates: number[];
+// };
+
 const ScapeGeometry = ({ scapeState, setScapeState }: Props) => {
   console.log("scapeState", scapeState);
 
@@ -83,7 +88,7 @@ const ScapeGeometry = ({ scapeState, setScapeState }: Props) => {
 
     if (!polygonFeatures) {
       setLoading(false);
-      toast.error("No polygon features found for selected location") 
+      toast.error("No polygon features found for selected location");
     }
 
     setSearchResults(polygonFeatures);
@@ -116,7 +121,8 @@ const ScapeGeometry = ({ scapeState, setScapeState }: Props) => {
         <h2 className="text-lg font-semibold mb-1">Scape Spatial Domain</h2>
         <p className="text-sm text-gray-600 mb-4">
           Search and select a location to define the spatial domain of your
-          scape, <br /> You may search for a place, city, or region. e,g New York City, US or Lagos, Nigeria.
+          scape, <br /> You may search for a place, city, or region. e,g New
+          York City, US or Lagos, Nigeria.
         </p>
 
         <div className="relative">
