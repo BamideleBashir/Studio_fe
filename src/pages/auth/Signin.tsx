@@ -47,7 +47,7 @@ const Signin = () => {
         console.log(err);
         setError(
           err.response.message ||
-            "Something went wrong. Please try again later."
+            "Something went wrong. Please try again later.",
         );
       });
   };
@@ -62,10 +62,6 @@ const Signin = () => {
         <h1 className="text-2xl font-semibold mb-6 mt-8">
           Login with your ByteId
         </h1>
-
-        {/* <p className="text-center text-sm text-gray-700 mb-10">
-          Login with your ByteId to continue
-        </p> */}
 
         {error && (
           <div
@@ -119,7 +115,7 @@ const Signin = () => {
           </Link>
 
           <button
-            className="w-full bg-black text-white p-2 rounded-full mt-10 font-bold"
+            className="w-full black_button mt-8"
             type="submit"
             disabled={loading}
           >
@@ -127,7 +123,7 @@ const Signin = () => {
           </button>
         </form>
 
-        <div className="mt-4 text-center">
+        <div className="mt-4 text-center text-sm">
           <p>
             Don't have an account?{" "}
             <Link to="/signup" className="text-red">

@@ -2,11 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-*, html {
+*,
+html {
   font-family: "DM Sans", sans-serif;
 }
 
@@ -25,7 +28,6 @@
 .button {
   @apply bg-black text-white rounded-2xl p-2 px-5 cursor-pointer;
 }
-
 
 .modal_overlay {
   position: fixed;
@@ -47,4 +49,8 @@
   background-color: white;
   padding: 1rem;
   border-radius: 10px;
+}
+
+.black_button {
+  @apply bg-black text-white rounded-full py-4 px-4;
 }

@@ -164,19 +164,16 @@ const ScapeMetadata = ({ formData, setFormData, setSelectedTab }: Props) => {
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-8 flex flex-col gap-3">
         <button
           onClick={() => handleComplete()}
-          className="bg-primary text-white p-3 rounded-lg block w-full"
+          className="black_button w-full"
         >
           {isLoading ? "Creating..." : "Create Scape"}
         </button>
-      </div>
-
-      <div className="mt-6">
         <button
           onClick={() => setSelectedTab("scape_objects")}
-          className="bg-white font-bold text-black p-2 px-4 rounded-lg block w-full"
+          className="bg-white border border-gray-300 text-gray-700 font-bold py-3 rounded-full hover:bg-gray-50 transition-colors block w-full"
         >
           Back
         </button>

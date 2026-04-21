@@ -6,7 +6,7 @@ import Signin from "./pages/auth/Signin";
 import AppLayout from "./pages/application/components/AppLayout";
 import Home from "./pages/application/Home";
 import Profile from "./pages/profile/Profile";
-// import CreateScapes from "./pages/application/scapes/CreateScapes";
+import AllScapes from "./pages/application/scapes/AllScapes";
 import CreateScape from "./pages/CreateScape";
 import ScapeDetails from "./pages/ScapeDetails";
 
@@ -32,6 +32,7 @@ const App = () => {
 
           <Route path="/" element={<AppLayout />}>
             <Route path="home" element={<Home />} />
+            <Route path="scapes" element={<AllScapes />} />
             <Route path="create-scape" element={<CreateScape />} />
             <Route path="scape-details/:id" element={<ScapeDetails />} />
 

@@ -166,14 +166,14 @@ const ScapeBasicInfo = ({ formData, setFormData, setSelectedTab }: Props) => {
           </select>
         </div>
       </div>
-      <div className="mt-6">
+      <div className="mt-8 flex flex-col gap-3">
         <button
-          className="bg-primary text-white p-3 font-bold rounded-lg w-full"
+          className="black_button w-full"
           onClick={() => handleNextClick()}
         >
           Next
         </button>
-      </div>{" "}
+      </div>
     </div>
   );
 };

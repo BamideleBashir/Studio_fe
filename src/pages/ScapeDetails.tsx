@@ -5,22 +5,24 @@ import { ScapeApi } from "../api/scapeApi";
 import ScapeObjectList from "./sections/ScapeObjectList";
 import ScapeActivityList from "./sections/ScapeActivityList";
 import ScapeLightObjectList from "./sections/ScapeLightObjectList";
+import EditScapeModal from "./modals/EditScapeModal";
 
 const ScapeDetails = () => {
   const { id } = useParams<string>();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<IScape | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const fetchScape = async () => {
     if (!id) return;
 
     ScapeApi.getScapeById(id)
-     .then((res) => {
+      .then((res) => {
         console.log(res);
         setData(res.data);
         setLoading(false);
       })
-     .catch((err) => {
+      .catch((err) => {
         console.log(err);
         setLoading(false);
       });
@@ -46,13 +48,19 @@ const ScapeDetails = () => {
     <div>
       <div className="bg-white shadow-md rounded-lg p-6">
         {/* Title and Category */}
-        <div className="mb-4">
-          <h2 className="text-3xl font-bold text-gray-800 mb-1">
-            {data.title}
-          </h2>
-          <p className="text-gray-600">
-            {data.category}
-          </p>
+        <div className="mb-4 flex justify-between items-start">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-800 mb-1">
+              {data.title}
+            </h2>
+            <p className="text-gray-600 capitalize">{data.category}</p>
+          </div>
+          <button
+            onClick={() => setIsEditModalOpen(true)}
+            className="black_button px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap"
+          >
+            Edit Scape
+          </button>
         </div>
 
         <div className="text-sm mb-4">
@@ -101,7 +109,9 @@ const ScapeDetails = () => {
             <span className="block font-semibold text-gray-700 mb-1">
               Search Engine
             </span>
-            <p className="text-gray-700">{data.enableSearchEngine ? "Enabled" : "Disabled"}</p>
+            <p className="text-gray-700">
+              {data.enableSearchEngine ? "Enabled" : "Disabled"}
+            </p>
           </div>
         </div>
 
@@ -111,7 +121,10 @@ const ScapeDetails = () => {
             <h3 className="text-lg font-semibold text-blue mb-2">Keywords</h3>
             <div className="flex flex-wrap gap-2">
               {data.keywords.map((keyword, index) => (
-                <span key={index} className="bg-gray-100 text-gray-800 px-2 py-1 rounded-md text-sm">
+                <span
+                  key={index}
+                  className="bg-gray-100 text-gray-800 px-2 py-1 rounded-md text-sm"
+                >
                   {keyword}
                 </span>
               ))}
@@ -125,7 +138,9 @@ const ScapeDetails = () => {
             <h3 className="text-lg font-semibold text-blue mb-2">Admins</h3>
             <ul className="list-disc pl-5">
               {data.admins.map((admin, index) => (
-                <li key={index} className="text-gray-700">{admin}</li>
+                <li key={index} className="text-gray-700">
+                  {admin}
+                </li>
               ))}
             </ul>
           </div>
@@ -136,24 +151,41 @@ const ScapeDetails = () => {
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-blue mb-2">Geometry</h3>
             <p className="text-gray-700">Type: {data.geometry.type}</p>
-            <p className="text-gray-700">Coordinates: {data.geometry.coordinates.length} points</p>
+            <p className="text-gray-700">
+              Coordinates: {data.geometry.coordinates.length} points
+            </p>
           </div>
         )}
 
         {id && data.objects && data.objects.length > 0 && (
-          <ScapeObjectList scapeId={id} objects={data.objects} fetchScape={fetchScape} />
+          <ScapeObjectList
+            scapeId={id}
+            objects={data.objects}
+            fetchScape={fetchScape}
+          />
         )}
 
         {id && data.objects && data.objects.length > 0 && (
-          <ScapeActivityList scapeId={id} activities={data.activities} fetchScape={fetchScape} />
+          <ScapeActivityList
+            scapeId={id}
+            activities={data.activities}
+            fetchScape={fetchScape}
+          />
         )}
 
         {id && data.objects && data.objects.length > 0 && (
           <ScapeLightObjectList scapeId={id} fetchScape={fetchScape} />
         )}
       </div>
-    </div>
-  )
-}
 
-export default ScapeDetails
+      <EditScapeModal
+        open={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        scape={data}
+        onSuccess={fetchScape}
+      />
+    </div>
+  );
+};
+
+export default ScapeDetails;

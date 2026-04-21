@@ -13,6 +13,10 @@ export const ScapeApi = {
     const response = await api.post("/scape", body);
     return response.data;
   },
+  update: async (id: string, body: any) => {
+    const response = await api.put(`/scape/${id}`, body);
+    return response.data;
+  },
   getYourScapes: async () => {
     const response = await api.get("/scape");
     return response.data;

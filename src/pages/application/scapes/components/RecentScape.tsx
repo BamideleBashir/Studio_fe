@@ -38,7 +38,7 @@ const RecentScape = () => {
       <div className="flex justify-between mt-4">
         <h4 className="font-medium text-xl">Recent Scapes</h4>
         <div>
-          <Link to="#">See all</Link>
+          <Link to="/scapes" className="text-blue-600 font-medium hover:underline">See all</Link>
         </div>
       </div>
 
