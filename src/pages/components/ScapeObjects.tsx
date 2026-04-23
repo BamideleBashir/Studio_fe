@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { IScapeFormState, ScapeObject } from "../CreateScape";
+import { IScapeFormState, ScapeObject, INucleus } from "../CreateScape";
 import FilterSearchInput from "./FilterSearchInput";
 import ObjectFunctionApi from "../../api/objectFunctionApi";
 import { toast } from "react-toastify";
@@ -40,7 +40,7 @@ const ScapeObjects = ({ formData, setFormData, setSelectedTab }: Props) => {
   const [selectedNucleus, setSelectedNucleus] = useState<any>();
 
   const [newObject, setNewObject] = useState<ScapeObject>({
-    nucleus: selectedNucleus,
+    nucleus: selectedNucleus as unknown as INucleus,
     objectFunctions: [],
     pinAccess: "public",
   });
@@ -54,6 +54,7 @@ const ScapeObjects = ({ formData, setFormData, setSelectedTab }: Props) => {
   };
 
   const [objectFunctions, setObjectFunctions] = useState<IObjectFunction[]>([]);
+  const [loadingFunctions, setLoadingFunctions] = useState(false);
 
   const addNewObject = () => {
     if (!newObject.nucleus) {
@@ -74,14 +75,14 @@ const ScapeObjects = ({ formData, setFormData, setSelectedTab }: Props) => {
 
     // clear
     setNewObject({
-      nucleus: selectedNucleus,
+      nucleus: undefined as unknown as INucleus,
       objectFunctions: [],
       pinAccess: "public",
     });
 
     toast.info("Object added");
 
-    setSelectedNucleus({});
+    setSelectedNucleus(undefined);
     setObjectFunctions([]);
   };
 
@@ -94,14 +95,17 @@ const ScapeObjects = ({ formData, setFormData, setSelectedTab }: Props) => {
   };
 
   const fetchObjectFunctions = (nucleus: string) => {
+    setLoadingFunctions(true);
     ObjectFunctionApi.getObjectFunctionsByNucleusId(nucleus)
       .then((res) => {
         console.log("res: function", res);
         setObjectFunctions(res.data);
+        setLoadingFunctions(false);
       })
       .catch((err) => {
         console.log("err: function", err);
         toast.error("Error fetching object functions");
+        setLoadingFunctions(false);
       });
   };
 
@@ -216,48 +220,56 @@ const ScapeObjects = ({ formData, setFormData, setSelectedTab }: Props) => {
                 Select Object Functions
               </label>
               <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
-                {objectFunctions.map((objectFunction, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between bg-white border p-3 rounded-lg hover:border-gray-400 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <img
-                        className="w-10 h-10 rounded-full object-cover border"
-                        src={objectFunction.icon?.url}
-                        alt=""
-                      />
-                      <div>
-                        <p className="font-medium text-sm">
-                          {objectFunction.title}
-                        </p>
-                        <p className="text-xs text-gray-500 line-clamp-1">
-                          {objectFunction.description}
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() =>
-                        newObject.objectFunctions.includes(objectFunction._id)
-                          ? removeObjectFunction(objectFunction)
-                          : addObjectFunction(objectFunction)
-                      }
-                      className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                        newObject.objectFunctions.includes(objectFunction._id)
-                          ? "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100"
-                          : "bg-black text-white hover:bg-gray-800"
-                      }`}
-                    >
-                      {newObject.objectFunctions.includes(objectFunction._id)
-                        ? "Remove"
-                        : "Add"}
-                    </button>
-                  </div>
-                ))}
-                {objectFunctions.length === 0 && (
+                {loadingFunctions ? (
                   <p className="text-sm text-gray-500 text-center py-6 bg-white rounded-lg border border-dashed">
-                    No object functions found for this nucleus
+                    Loading object functions...
                   </p>
+                ) : (
+                  <>
+                    {objectFunctions.map((objectFunction, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between bg-white border p-3 rounded-lg hover:border-gray-400 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <img
+                            className="w-10 h-10 rounded-full object-cover border"
+                            src={objectFunction.icon?.url}
+                            alt=""
+                          />
+                          <div>
+                            <p className="font-medium text-sm">
+                              {objectFunction.title}
+                            </p>
+                            <p className="text-xs text-gray-500 line-clamp-1">
+                              {objectFunction.description}
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() =>
+                            newObject.objectFunctions.includes(objectFunction._id)
+                              ? removeObjectFunction(objectFunction)
+                              : addObjectFunction(objectFunction)
+                          }
+                          className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                            newObject.objectFunctions.includes(objectFunction._id)
+                              ? "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100"
+                              : "bg-black text-white hover:bg-gray-800"
+                          }`}
+                        >
+                          {newObject.objectFunctions.includes(objectFunction._id)
+                            ? "Remove"
+                            : "Add"}
+                        </button>
+                      </div>
+                    ))}
+                    {objectFunctions.length === 0 && (
+                      <p className="text-sm text-gray-500 text-center py-6 bg-white rounded-lg border border-dashed">
+                        No object functions found for this nucleus
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
             </div>
