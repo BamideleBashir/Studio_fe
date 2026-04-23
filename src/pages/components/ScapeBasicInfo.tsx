@@ -8,15 +8,20 @@ type Props = {
 };
 
 const categoryList = [
-  "Entertainment",
+  "Transportation",
+  "Energy",
+  "Manufacturing & Industry",
+  "Construction & Real Estate",
+  "Commerce & Trade",
+  "Finance",
+  "Healthcare",
   "Education",
-  "social",
-  "Government",
-  "transportation",
-  "commerce",
-  "health",
-  "real estate",
-  "environment",
+  "Agriculture & Food",
+  "Government & Public Services",
+  "Social & Community",
+  "Entertainment & Media",
+  "Environment & Sustainability",
+  "Research & Science",
 ];
 
 const ScapeBasicInfo = ({ formData, setFormData, setSelectedTab }: Props) => {
