@@ -24,4 +24,9 @@ export const NucleusApi = {
     const response = await api.delete(`/nucleus/${id}`);
     return response.data;
   },
+
+  getHumanNucleus: async () => {
+    const response = await api.get('/nucleus/human');
+    return response.data;
+  },
 };

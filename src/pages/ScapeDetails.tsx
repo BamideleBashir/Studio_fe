@@ -136,13 +136,19 @@ const ScapeDetails = () => {
         {data.admins && data.admins.length > 0 && (
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-blue mb-2">Admins</h3>
-            <ul className="list-disc pl-5">
-              {data.admins.map((admin, index) => (
-                <li key={index} className="text-gray-700">
-                  {admin}
-                </li>
+            <div className="flex flex-col gap-2">
+              {data.admins.map((admin) => (
+                <div key={admin._id} className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+                  <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-semibold text-gray-600">
+                    {admin.firstName[0]}{admin.lastName[0]}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-800">{admin.firstName} {admin.lastName}</p>
+                    <p className="text-xs text-gray-500">{admin.email}</p>
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         )}
 

@@ -35,81 +35,81 @@ const RecentScape = () => {
 
   return (
     <div>
-      <div className="flex justify-between mt-4">
-        <h4 className="font-medium text-xl">Recent Scapes</h4>
+      <div className="flex justify-between mt-4 mb-2">
+        <h4 className="font-medium text-l">Recent</h4>
         <div>
-          <Link to="/scapes" className="text-blue-600 font-medium hover:underline">See all</Link>
+          <Link
+            to="/scapes"
+            className="text-blue-600 font-medium hover:underline"
+          >
+            See all
+          </Link>
         </div>
       </div>
 
-      {/* no recent scape */}
-      {data.length === 0 && (
+      {/* Loading state */}
+      {loading ? (
+        <div className="border p-4 rounded-2xl flex justify-center items-center h-[112px]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      ) : data.length === 0 ? (
         <div className="border p-4 rounded-2xl">
           <p className="text-center">No recent scapes.</p>
         </div>
+      ) : (
+        <div>
+          <Swiper
+            spaceBetween={10}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            scrollbar={{ draggable: true }}
+            modules={[Pagination]}
+            className="pb-8 mb-0"
+            breakpoints={{
+              640: {
+                slidesPerView: 1,
+                spaceBetween: 5,
+              },
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              1024: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+              },
+            }}
+          >
+            {data.map((scape, index) => (
+              <SwiperSlide key={index}>
+                <Link className="" to={`/scape-details/${scape._id}`}>
+                  <div className="p-4 rounded-2xl bg-[#F4F8FF]">
+                    <div className="flex gap-2">
+                      <div className="">
+                        <img
+                          src={scape.icon.url}
+                          alt={scape.title}
+                          className="w-24 h-20 rounded-2xl object-cover shadow"
+                        />
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-xl">{scape.title}</h4>
+                        <p className="text-sm">
+                          {scape.description.length > 100
+                            ? scape.description.slice(0, 50) + "..."
+                            : scape.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       )}
-
-      <div>
-        <Swiper
-          spaceBetween={10}
-          slidesPerView={1}
-          navigation
-          pagination={{ clickable: true }}
-          scrollbar={{ draggable: true }}
-          modules={[Pagination]}
-          className="pb-8 mb-0"
-          breakpoints={{
-            640: {
-              slidesPerView: 1,
-              spaceBetween: 10,
-            },
-            768: {
-              slidesPerView: 2,
-              spaceBetween: 20,
-            },
-            1024: {
-              slidesPerView: 3,
-              spaceBetween: 30,
-            },
-          }}
-        >
-          {data.map((scape, index) => (
-            <SwiperSlide key={index}>
-              <div className="border p-4 rounded-2xl">
-                <div className="flex gap-2">
-                  <div className="">
-                    <img
-                      src={scape.icon.url}
-                      alt={scape.title}
-                      className="w-28 h-20 rounded-2xl object-cover"
-                    />
-                  </div>
-
-                  <div>
-                    <h4 className="font-medium text-xl">{scape.title}</h4>
-                    <p className="text-sm">
-                      {
-                        scape.description.length > 100
-                          ? scape.description.slice(0, 50) + "..."
-                          : scape.description
-                      }
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-2">
-                  <Link
-                    className="text-blue-500 text-sm underline"
-                    to={`/scape-details/${scape._id}`}
-                  >
-                    View details
-                  </Link>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
     </div>
   );
 };

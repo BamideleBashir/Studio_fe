@@ -36,12 +36,14 @@ export interface IScapeFormState {
   description: string;
   category: string;
   canPinHumans: null | boolean;
+  humanFunctions: string[];
   owner?: ScapeOwner;
   enableSearchEngine: boolean;
   keywords: string[];
   viewingAccess: "public" | "private" | "admins" | string;
   commentAccess: "disabled" | "public" | "private" | "admins" | string;
   admins: string[];
+  primaryObject: string;
   objects: ScapeObject[];
   geometry: {
     type:
@@ -68,6 +70,7 @@ const CreateScape = () => {
     description: "",
     category: "",
     canPinHumans: null,
+    humanFunctions: [],
     owner: {
       name: "",
       link: "",
@@ -77,6 +80,7 @@ const CreateScape = () => {
     viewingAccess: "public",
     commentAccess: "disabled",
     admins: [],
+    primaryObject: "",
     objects: [],
     geometry: {
       type: "Polygon",

@@ -129,7 +129,7 @@ export interface IScape {
   keywords: string[];
   viewingAccess: 'public' | 'private' | 'admins' | string;
   commentAccess: 'disabled' | 'public' | 'private' | 'admins' | string;
-  admins: string[];
+  admins: { _id: string; firstName: string; lastName: string; email: string }[];
   objects: ScapeObject[];
   geometry: {
     type: 'Point' | 'LineString' | 'Polygon' | 'MultiPoint' | 'MultiLineString' | 'MultiPolygon' | 'GeometryCollection';

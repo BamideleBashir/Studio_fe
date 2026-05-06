@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import ModalBase from "./ModalBase";
 import { IScape } from "../../types";
 import { ScapeApi } from "../../api/scapeApi";
+import { ProfileApi } from "../../api/profileApi";
 import { toast } from "react-toastify";
 
 type Props = {
@@ -10,6 +12,13 @@ type Props = {
   scape: IScape;
   onSuccess: () => void;
 };
+
+interface AdminUser {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
 
 const categoryList = [
   "Entertainment",
@@ -35,6 +44,10 @@ const EditScapeModal = ({ open, onClose, scape, onSuccess }: Props) => {
     keywords: "",
   });
 
+  const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminLookupLoading, setAdminLookupLoading] = useState(false);
+
   useEffect(() => {
     if (scape && open) {
       setFormData({
@@ -46,8 +59,32 @@ const EditScapeModal = ({ open, onClose, scape, onSuccess }: Props) => {
         enableSearchEngine: scape.enableSearchEngine || false,
         keywords: scape.keywords ? scape.keywords.join(", ") : "",
       });
+      setAdmins(scape.admins || []);
+      setAdminEmail("");
     }
   }, [scape, open]);
+
+  const handleAdminAdd = async () => {
+    if (!adminEmail.trim()) return;
+    if (admins.some((a) => a.email === adminEmail.trim().toLowerCase())) {
+      toast.info("User already added");
+      return;
+    }
+    setAdminLookupLoading(true);
+    try {
+      const res = await ProfileApi.lookupByEmail(adminEmail.trim());
+      setAdmins((prev) => [...prev, res.data]);
+      setAdminEmail("");
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "User not found");
+    } finally {
+      setAdminLookupLoading(false);
+    }
+  };
+
+  const handleAdminRemove = (userId: string) => {
+    setAdmins((prev) => prev.filter((a) => a._id !== userId));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,9 +95,13 @@ const EditScapeModal = ({ open, onClose, scape, onSuccess }: Props) => {
 
     setLoading(true);
     try {
-      const payload = {
+      const payload: Record<string, unknown> = {
         ...formData,
-        keywords: formData.keywords.split(",").map((k) => k.trim()).filter((k) => k),
+        keywords: formData.keywords
+          .split(",")
+          .map((k) => k.trim())
+          .filter((k) => k),
+        admins: JSON.stringify(admins.map((a) => a._id)),
       };
 
       await ScapeApi.update(scape._id, payload);
@@ -168,6 +209,63 @@ const EditScapeModal = ({ open, onClose, scape, onSuccess }: Props) => {
             className="border border-gray-300 rounded-md px-3 py-2 text-sm outline-none focus:border-black"
             placeholder="e.g. mapping, environment, transport"
           />
+        </div>
+
+        {/* Admins */}
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-semibold text-black">Admins</label>
+
+          <div className="flex gap-2">
+            <input
+              type="email"
+              className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm outline-none focus:border-black"
+              placeholder="user@example.com"
+              value={adminEmail}
+              onChange={(e) => setAdminEmail(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleAdminAdd();
+                }
+              }}
+            />
+            <button
+              type="button"
+              onClick={handleAdminAdd}
+              disabled={adminLookupLoading || !adminEmail.trim()}
+              className="px-3 py-2 bg-black text-white text-sm rounded-md disabled:opacity-50 whitespace-nowrap"
+            >
+              {adminLookupLoading ? "..." : "Add"}
+            </button>
+          </div>
+
+          {admins.length > 0 && (
+            <div className="flex flex-col gap-2 mt-1">
+              {admins.map((admin) => (
+                <div
+                  key={admin._id}
+                  className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-3 py-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-gray-300 flex items-center justify-center text-xs font-semibold text-gray-600">
+                      {admin.firstName[0]}{admin.lastName[0]}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">{admin.firstName} {admin.lastName}</p>
+                      <p className="text-xs text-gray-500">{admin.email}</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleAdminRemove(admin._id)}
+                    className="text-gray-400 hover:text-red-500 text-lg leading-none"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <button

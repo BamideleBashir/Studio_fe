@@ -17,5 +17,10 @@ export const ProfileApi = {
     formData.append('file', file);
     const response = await api.put('/profile/picture', formData);
     return response.data;
+  },
+
+  lookupByEmail: async (email: string) => {
+    const response = await api.get(`/profile/lookup?email=${encodeURIComponent(email)}`);
+    return response.data;
   }
 };

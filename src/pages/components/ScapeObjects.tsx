@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { IScapeFormState, ScapeObject, INucleus } from "../CreateScape";
 import FilterSearchInput from "./FilterSearchInput";
 import ObjectFunctionApi from "../../api/objectFunctionApi";
+import { NucleusApi } from "../../api/nucleusApi";
 import { toast } from "react-toastify";
 
 interface Icon {
@@ -38,6 +39,8 @@ type Props = {
 const ScapeObjects = ({ formData, setFormData, setSelectedTab }: Props) => {
   const [objects, setObjects] = useState<ScapeObject[]>(formData.objects);
   const [selectedNucleus, setSelectedNucleus] = useState<any>();
+  const [humanFunctions, setHumanFunctions] = useState<IObjectFunction[]>([]);
+  const [loadingHumanFunctions, setLoadingHumanFunctions] = useState(false);
 
   const [newObject, setNewObject] = useState<ScapeObject>({
     nucleus: selectedNucleus as unknown as INucleus,
@@ -115,6 +118,30 @@ const ScapeObjects = ({ formData, setFormData, setSelectedTab }: Props) => {
       fetchObjectFunctions(newObject.nucleus._id);
     }
   }, [newObject.nucleus]);
+
+  useEffect(() => {
+    if (!formData.canPinHumans) return;
+    setLoadingHumanFunctions(true);
+    NucleusApi.getHumanNucleus()
+      .then((res) => {
+        return ObjectFunctionApi.getObjectFunctionsByNucleusId(res.data._id);
+      })
+      .then((res) => {
+        setHumanFunctions(res.data);
+        setLoadingHumanFunctions(false);
+      })
+      .catch(() => {
+        setLoadingHumanFunctions(false);
+      });
+  }, [formData.canPinHumans]);
+
+  const toggleHumanFunction = (fn: IObjectFunction) => {
+    const selected = formData.humanFunctions;
+    const updated = selected.includes(fn._id)
+      ? selected.filter((id) => id !== fn._id)
+      : [...selected, fn._id];
+    setFormData({ ...formData, humanFunctions: updated });
+  };
 
   // add object function
   const addObjectFunction = (objectFunction: IObjectFunction) => {
@@ -334,6 +361,55 @@ const ScapeObjects = ({ formData, setFormData, setSelectedTab }: Props) => {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {formData.canPinHumans && (
+        <div className="bg-white border rounded-xl p-5 mb-8 shadow-sm">
+          <h3 className="font-semibold text-lg mb-1 border-b pb-2">Human Functions</h3>
+          <p className="text-xs text-gray-500 mb-4">
+            Select the functions available to humans when they pin themselves to this scape.
+          </p>
+          {loadingHumanFunctions ? (
+            <p className="text-sm text-gray-500 text-center py-6 border border-dashed rounded-lg">
+              Loading human functions...
+            </p>
+          ) : humanFunctions.length === 0 ? (
+            <p className="text-sm text-gray-500 text-center py-6 border border-dashed rounded-lg">
+              No human functions found. Create a Human Nucleus in nucleus_fe first.
+            </p>
+          ) : (
+            <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+              {humanFunctions.map((fn) => (
+                <div
+                  key={fn._id}
+                  className="flex items-center justify-between bg-white border p-3 rounded-lg hover:border-gray-400 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <img
+                      className="w-10 h-10 rounded-full object-cover border"
+                      src={fn.icon?.url}
+                      alt=""
+                    />
+                    <div>
+                      <p className="font-medium text-sm">{fn.title}</p>
+                      <p className="text-xs text-gray-500 line-clamp-1">{fn.description}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => toggleHumanFunction(fn)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                      formData.humanFunctions.includes(fn._id)
+                        ? "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100"
+                        : "bg-black text-white hover:bg-gray-800"
+                    }`}
+                  >
+                    {formData.humanFunctions.includes(fn._id) ? "Remove" : "Add"}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
