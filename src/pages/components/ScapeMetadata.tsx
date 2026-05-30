@@ -88,6 +88,12 @@ const ScapeMetadata = ({ formData, setFormData, setSelectedTab }: Props) => {
     if (formData.geometry.coordinates.length) {
       payload.append("geometry", JSON.stringify(formData.geometry));
     }
+    if (formData.position?.coordinates?.length === 2) {
+      payload.append("position", JSON.stringify(formData.position));
+    }
+    if (formData.location?.displayName) {
+      payload.append("location", JSON.stringify(formData.location));
+    }
     payload.append("owner", JSON.stringify(formData.owner));
     payload.append("enableSearchEngine", formData.enableSearchEngine.toString());
     if (formData.primaryObject) {

@@ -60,6 +60,13 @@ export interface IScapeFormState {
     type: "Point";
     coordinates: number[];
   };
+  location: {
+    country: string;
+    countryCode: string;
+    state: string;
+    city: string;
+    displayName: string;
+  };
 }
 
 const CreateScape = () => {
@@ -89,6 +96,13 @@ const CreateScape = () => {
     position: {
       type: "Point",
       coordinates: [],
+    },
+    location: {
+      country: "",
+      countryCode: "",
+      state: "",
+      city: "",
+      displayName: "",
     },
   });
 

@@ -4,30 +4,33 @@ import { IScapeFormState } from "../CreateScape";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-interface FeatureGeocoding {
+// Nominatim `jsonv2` result shape (with polygon_geojson=1 & addressdetails=1)
+interface NominatimAddress {
+  country?: string;
+  country_code?: string;
+  state?: string;
+  region?: string;
+  county?: string;
+  city?: string;
+  town?: string;
+  village?: string;
+}
+
+interface NominatimGeoJSON {
+  type: string;
+  coordinates: number[][][];
+}
+
+interface NominatimResult {
   place_id: number;
-  osm_type: string;
   osm_id: number;
-  osm_key: string;
-  osm_value: string;
+  lat: string;
+  lon: string;
+  display_name: string;
   type: string;
-  label: string;
-  name: string;
-}
-
-interface FeatureProperties {
-  geocoding: FeatureGeocoding;
-}
-
-interface Geometry {
-  type: string;
-  coordinates: number[][][]; // 3D array of numbers
-}
-
-interface IFeature {
-  type: string;
-  properties: FeatureProperties;
-  geometry: Geometry;
+  class: string;
+  address?: NominatimAddress;
+  geojson?: NominatimGeoJSON;
 }
 
 type Props = {
@@ -47,15 +50,10 @@ type IGeometry = {
   coordinates: number[][][];
 };
 
-// type Position = {
-//   type: "Point";
-//   coordinates: number[];
-// };
-
 const ScapeGeometry = ({ scapeState, setScapeState }: Props) => {
   console.log("scapeState", scapeState);
 
-  const [searchResults, setSearchResults] = useState<IFeature[]>([]);
+  const [searchResults, setSearchResults] = useState<NominatimResult[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -65,55 +63,92 @@ const ScapeGeometry = ({ scapeState, setScapeState }: Props) => {
 
     const baseUrl = "https://nominatim.openstreetmap.org/search";
 
+    // jsonv2 returns lat/lon (center), the geojson polygon, AND an address
+    // object (state, country, country_code...) in a single request — so no
+    // separate reverse-geocode call is needed.
     const params = {
-      format: "geocodejson",
+      format: "jsonv2",
       polygon_geojson: 1,
+      addressdetails: 1,
+      limit: 10,
       q: searchQuery,
     };
 
-    const response = await axios.get(baseUrl, { params });
+    try {
+      const response = await axios.get<NominatimResult[]>(baseUrl, { params });
 
-    if (!response) {
-      setLoading(false);
+      // keep only results that actually have a Polygon boundary
+      const polygonResults = (response.data || []).filter(
+        (result) => result.geojson?.type === "Polygon"
+      );
+
+      if (polygonResults.length === 0) {
+        toast.error("No polygon boundary found for that search");
+      }
+
+      setSearchResults(polygonResults);
+    } catch (err) {
+      console.log(err);
       toast.error("Failed to fetch search results");
-    }
-
-    const data = response.data;
-    const features: IFeature[] = data.features;
-
-    // get only features where the geometry type is polygon
-    const polygonFeatures = features.filter(
-      (feature) => feature.geometry.type === "Polygon"
-    );
-
-    if (!polygonFeatures) {
+    } finally {
       setLoading(false);
-      toast.error("No polygon features found for selected location");
     }
-
-    setSearchResults(polygonFeatures);
-    setLoading(false);
   };
 
-  const handleSelectResult = (feature: IFeature) => {
-    const geometry = feature.geometry;
-    const coordinates = geometry.coordinates; // Assuming the first coordinate array is the boundary
+  const handleSelectResult = (result: NominatimResult) => {
+    if (!result.geojson) return;
 
     const newGeometry: IGeometry = {
       type: "Polygon",
-      coordinates: coordinates,
+      coordinates: result.geojson.coordinates,
+    };
+
+    // Center point [lng, lat] — GeoJSON order — for proximity filtering.
+    const position = {
+      type: "Point" as const,
+      coordinates: [parseFloat(result.lon), parseFloat(result.lat)],
+    };
+
+    const address = result.address || {};
+    const location = {
+      country: address.country || "",
+      countryCode: (address.country_code || "").toUpperCase(),
+      state: address.state || address.region || "",
+      city: address.city || address.town || address.village || address.county || "",
+      displayName: result.display_name || "",
     };
 
     setScapeState((prevState: IScapeFormState) => ({
       ...prevState,
       geometry: newGeometry,
+      position,
+      location,
     }));
 
-    toast.info(`${feature.properties.geocoding.label} selected`);
+    toast.info(`${result.display_name} selected`);
 
     setSearchResults([]);
     // setSearchQuery('');
   };
+
+  const handleClearLocation = () => {
+    setScapeState((prevState: IScapeFormState) => ({
+      ...prevState,
+      geometry: { type: "Polygon", coordinates: [] },
+      position: { type: "Point", coordinates: [] },
+      location: {
+        country: "",
+        countryCode: "",
+        state: "",
+        city: "",
+        displayName: "",
+      },
+    }));
+  };
+
+  const selectedLocation = scapeState.location;
+  const selectedPosition = scapeState.position;
+  const hasSelectedLocation = Boolean(selectedLocation?.displayName);
 
   return (
     <div className="space-y-4 mt-4">
@@ -147,19 +182,84 @@ const ScapeGeometry = ({ scapeState, setScapeState }: Props) => {
           </div>
         )}
 
+        {hasSelectedLocation && (
+          <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-2 min-w-0">
+                <svg
+                  className="w-5 h-5 text-green-600 shrink-0 mt-0.5"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-green-700">
+                    Selected location
+                  </p>
+                  <p className="text-sm text-gray-800 break-words">
+                    {selectedLocation?.displayName}
+                  </p>
+
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {selectedLocation?.city && (
+                      <span className="text-xs bg-white border border-green-200 text-green-800 rounded-full px-2 py-0.5">
+                        {selectedLocation.city}
+                      </span>
+                    )}
+                    {selectedLocation?.state && (
+                      <span className="text-xs bg-white border border-green-200 text-green-800 rounded-full px-2 py-0.5">
+                        {selectedLocation.state}
+                      </span>
+                    )}
+                    {selectedLocation?.country && (
+                      <span className="text-xs bg-white border border-green-200 text-green-800 rounded-full px-2 py-0.5">
+                        {selectedLocation.country}
+                        {selectedLocation.countryCode
+                          ? ` (${selectedLocation.countryCode})`
+                          : ""}
+                      </span>
+                    )}
+                  </div>
+
+                  {selectedPosition?.coordinates?.length === 2 && (
+                    <p className="mt-2 text-xs text-gray-500">
+                      Center: {selectedPosition.coordinates[1].toFixed(5)},{" "}
+                      {selectedPosition.coordinates[0].toFixed(5)} (lat, lng)
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleClearLocation}
+                className="text-xs text-red-500 hover:underline shrink-0"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        )}
+
         {searchResults.length > 0 && (
           <div className="mt-4">
             <h3 className="text-sm font-semibold mb-2">Search Results</h3>
             <ul>
-              {searchResults.map((result, index) => (
+              {searchResults.map((result) => (
                 <li
-                  key={index}
-                  className="mb-2 cursor-pointer flex justify-between"
+                  key={result.place_id}
+                  className="mb-2 cursor-pointer flex justify-between gap-2"
                 >
-                  <p>{result.properties.geocoding.label}</p>
+                  <p className="text-sm">{result.display_name}</p>
                   <button
                     onClick={() => handleSelectResult(result)}
-                    className="text-blue-500 hover:underline"
+                    className="text-blue-500 hover:underline shrink-0"
                   >
                     select
                   </button>
