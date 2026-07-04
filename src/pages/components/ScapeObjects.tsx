@@ -169,7 +169,7 @@ const ScapeObjects = ({ formData, setFormData, setSelectedTab }: Props) => {
       return;
     }
 
-    setSelectedTab("scape_metadata");
+    setSelectedTab("scape_activities");
   };
 
   return (

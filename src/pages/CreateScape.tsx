@@ -2,6 +2,7 @@ import { useState } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import ScapeBasicInfo from "./components/ScapeBasicInfo";
 import ScapeObjects from "./components/ScapeObjects";
+import ScapeActivities from "./components/ScapeActivities";
 import ScapeMetadata from "./components/ScapeMetadata";
 
 export interface ScapeOwner {
@@ -31,6 +32,22 @@ export interface ScapeObject {
   users?: string[];
 }
 
+export interface IActivityTemplate {
+  _id: string;
+  title: string;
+  category: string;
+  description: string;
+  icon: {
+    url: string;
+    publicId: string;
+  };
+}
+
+export interface ScapeActivityInput {
+  activity: IActivityTemplate;
+  pinAccess: "public" | "private" | "admins";
+}
+
 export interface IScapeFormState {
   title: string;
   description: string;
@@ -45,6 +62,7 @@ export interface IScapeFormState {
   admins: string[];
   primaryObject: string;
   objects: ScapeObject[];
+  activities: ScapeActivityInput[];
   geometry: {
     type:
       | "Point"
@@ -89,6 +107,7 @@ const CreateScape = () => {
     admins: [],
     primaryObject: "",
     objects: [],
+    activities: [],
     geometry: {
       type: "Polygon",
       coordinates: [],
@@ -123,6 +142,14 @@ const CreateScape = () => {
 
         <Tabs.Content value="scape_objects">
           <ScapeObjects
+            formData={formData}
+            setFormData={setFormData}
+            setSelectedTab={setSelectedTab}
+          />
+        </Tabs.Content>
+
+        <Tabs.Content value="scape_activities">
+          <ScapeActivities
             formData={formData}
             setFormData={setFormData}
             setSelectedTab={setSelectedTab}

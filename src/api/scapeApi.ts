@@ -17,6 +17,14 @@ export const ScapeApi = {
     const response = await api.put(`/scape/${id}`, body);
     return response.data;
   },
+  archive: async (id: string) => {
+    const response = await api.put(`/scape/${id}/archive`);
+    return response.data;
+  },
+  unarchive: async (id: string) => {
+    const response = await api.put(`/scape/${id}/unarchive`);
+    return response.data;
+  },
   // Update only spatial details (polygon geometry, center point, location identifiers)
   updateScapeLocation: async (
     id: string,

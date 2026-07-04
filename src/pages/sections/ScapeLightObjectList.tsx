@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { ScapeApi } from "../../api/scapeApi";
 import AddScapeLightObject from "../modals/AddScapeLightObject";
+import { SquaresPlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   scapeId: string;
@@ -41,6 +42,10 @@ const ScapeLightObjectList = ({ scapeId }: Props) => {
   }, []);
 
   const handleRemoveObject = async (objectId: string) => {
+    if (!window.confirm("Are you sure you want to remove this object?")) {
+      return;
+    }
+
     try {
       await ScapeApi.deleteScapeObject(scapeId, objectId);
       fetchObjects();
@@ -51,56 +56,62 @@ const ScapeLightObjectList = ({ scapeId }: Props) => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mt-8 mb-4">
-        <div className="font-medium text-xl">Scape Objects</div>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
+          <SquaresPlusIcon className="w-5 h-5 text-blue" />
+          Scape Objects
+          <span className="bg-gray-100 text-gray-600 text-xs font-semibold px-2 py-0.5 rounded-full">
+            {objects.length}
+          </span>
+        </h3>
 
         <AddScapeLightObject scapeId={scapeId} fetchScape={fetchObjects} />
       </div>
 
-      {loading && <div className="text-center">Loading...</div>}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-        {objects.length > 0 &&
-          objects.map((object) => (
+      {loading ? (
+        <p className="text-sm text-gray-500 text-center py-8">Loading…</p>
+      ) : objects.length === 0 ? (
+        <p className="text-sm text-gray-500 text-center py-8 border border-dashed border-gray-200 rounded-xl">
+          No objects added yet.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {objects.map((object) => (
             <div
               key={object._id}
-              className="flex items-center justify-between mb-4 py-2 p-4 rounded-3xl bg-[#f3f4f3]"
+              className="relative bg-white border border-gray-100 shadow-sm rounded-2xl p-4 hover:shadow-md transition-shadow"
             >
-              <div className="flex items-center">
+              <button
+                onClick={() => handleRemoveObject(object._id)}
+                title="Remove object"
+                className="absolute top-3 right-3 text-red-500 hover:bg-red-50 p-1.5 rounded-full transition-colors"
+              >
+                <TrashIcon className="w-4 h-4" />
+              </button>
+
+              <div className="flex items-start gap-3 pr-8">
                 <img
                   src={
                     object.icon?.url ||
                     "https://cdn-icons-png.flaticon.com/512/8654/8654975.png"
                   }
                   alt={object.title}
-                  className="w-12 h-12 rounded-full"
+                  className="w-14 h-14 rounded-xl object-cover border border-gray-100 shrink-0"
                 />
 
-                <div className="ml-4 justify-between w-full">
-                  <div>
-                    <p className="font-medium text-lg">{object.title}</p>
-                    <p className="text-gray-600 text-sm">
-                      {object.description}
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={() => handleRemoveObject(object._id)}
-                    className="text-red-500 hover:underline text-sm font-medium"
-                  >
-                    remove
-                  </button>
+                <div className="min-w-0">
+                  <h4 className="font-bold text-gray-900 truncate">
+                    {object.title}
+                  </h4>
+                  <p className="text-xs text-gray-500 line-clamp-2">
+                    {object.description}
+                  </p>
                 </div>
               </div>
             </div>
           ))}
-
-          {
-            objects.length === 0 && (
-              <div className="text-center col-span-3">No objects added yet.</div> 
-            )
-          }
-      </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -5,6 +5,8 @@ import { IScape } from "../../types";
 import { ScapeApi } from "../../api/scapeApi";
 import { ProfileApi } from "../../api/profileApi";
 import { toast } from "react-toastify";
+import { XMarkIcon } from "@heroicons/react/24/solid";
+import { parseKeywords } from "../../utility";
 
 type Props = {
   open: boolean;
@@ -41,12 +43,14 @@ const EditScapeModal = ({ open, onClose, scape, onSuccess }: Props) => {
     viewingAccess: "public",
     commentAccess: "disabled",
     enableSearchEngine: false,
-    keywords: "",
   });
 
   const [admins, setAdmins] = useState<AdminUser[]>([]);
   const [adminEmail, setAdminEmail] = useState("");
   const [adminLookupLoading, setAdminLookupLoading] = useState(false);
+
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [keywordInput, setKeywordInput] = useState("");
 
   useEffect(() => {
     if (scape && open) {
@@ -57,12 +61,28 @@ const EditScapeModal = ({ open, onClose, scape, onSuccess }: Props) => {
         viewingAccess: scape.viewingAccess || "public",
         commentAccess: scape.commentAccess || "disabled",
         enableSearchEngine: scape.enableSearchEngine || false,
-        keywords: scape.keywords ? scape.keywords.join(", ") : "",
       });
       setAdmins(scape.admins || []);
       setAdminEmail("");
+      setKeywords(parseKeywords(scape.keywords));
+      setKeywordInput("");
     }
   }, [scape, open]);
+
+  const handleKeywordAdd = () => {
+    const trimmed = keywordInput.trim();
+    if (!trimmed) return;
+    if (keywords.some((k) => k.toLowerCase() === trimmed.toLowerCase())) {
+      toast.info("Keyword already added");
+      return;
+    }
+    setKeywords((prev) => [...prev, trimmed]);
+    setKeywordInput("");
+  };
+
+  const handleKeywordRemove = (keyword: string) => {
+    setKeywords((prev) => prev.filter((k) => k !== keyword));
+  };
 
   const handleAdminAdd = async () => {
     if (!adminEmail.trim()) return;
@@ -95,14 +115,15 @@ const EditScapeModal = ({ open, onClose, scape, onSuccess }: Props) => {
 
     setLoading(true);
     try {
-      const payload: Record<string, unknown> = {
-        ...formData,
-        keywords: formData.keywords
-          .split(",")
-          .map((k) => k.trim())
-          .filter((k) => k),
-        admins: JSON.stringify(admins.map((a) => a._id)),
-      };
+      const payload = new FormData();
+      payload.append("title", formData.title);
+      payload.append("description", formData.description);
+      payload.append("category", formData.category);
+      payload.append("viewingAccess", formData.viewingAccess);
+      payload.append("commentAccess", formData.commentAccess);
+      payload.append("enableSearchEngine", String(formData.enableSearchEngine));
+      payload.append("keywords", keywords.join(","));
+      payload.append("admins", JSON.stringify(admins.map((a) => a._id)));
 
       await ScapeApi.update(scape._id, payload);
       toast.success("Scape updated successfully");
@@ -200,15 +221,52 @@ const EditScapeModal = ({ open, onClose, scape, onSuccess }: Props) => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-semibold text-black">Keywords (comma separated)</label>
-          <input
-            type="text"
-            value={formData.keywords}
-            onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
-            className="border border-gray-300 rounded-md px-3 py-2 text-sm outline-none focus:border-black"
-            placeholder="e.g. mapping, environment, transport"
-          />
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-semibold text-black">Keywords</label>
+
+          <div className="flex gap-2">
+            <input
+              type="text"
+              className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm outline-none focus:border-black"
+              placeholder="e.g. mapping"
+              value={keywordInput}
+              onChange={(e) => setKeywordInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleKeywordAdd();
+                }
+              }}
+            />
+            <button
+              type="button"
+              onClick={handleKeywordAdd}
+              disabled={!keywordInput.trim()}
+              className="px-3 py-2 bg-black text-white text-sm rounded-md disabled:opacity-50 whitespace-nowrap"
+            >
+              Add
+            </button>
+          </div>
+
+          {keywords.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-1">
+              {keywords.map((keyword) => (
+                <span
+                  key={keyword}
+                  className="flex items-center gap-1 bg-gray-100 text-gray-800 pl-2 pr-1 py-1 rounded-md text-sm"
+                >
+                  {keyword}
+                  <button
+                    type="button"
+                    onClick={() => handleKeywordRemove(keyword)}
+                    className="text-gray-400 hover:text-red-500"
+                  >
+                    <XMarkIcon className="w-4 h-4" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Admins */}

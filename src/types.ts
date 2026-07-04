@@ -136,7 +136,12 @@ export interface IScape {
     coordinates: number[][];
   },
   icon: IImage;
+  archived?: boolean;
+  archivedAt?: string | null;
+  // Present only when the scape is archived and the requester isn't its owner.
+  restricted?: boolean;
   user: {
+    _id?: string;
     firstName: string;
     lastName: string;
     email: string;

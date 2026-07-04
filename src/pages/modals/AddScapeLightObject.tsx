@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ScapeApi } from "../../api/scapeApi";
 import { toast } from "react-toastify";
 import ModalBase from "./ModalBase";
+import { PlusIcon } from "@heroicons/react/24/outline";
 
 interface AddObject {
   title: string;
@@ -61,10 +62,12 @@ const AddScapeLightObject = ({
   };
   return (
     <div>
-      <button onClick={() => setIsModalOpen(true)} className="my_button">
-        <div className="button">
-          <p className="text-main">Add Scape Object</p>
-        </div>
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="flex items-center gap-1.5 bg-black text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-gray-800 transition-colors whitespace-nowrap"
+      >
+        <PlusIcon className="w-4 h-4" />
+        Add Scape Object
       </button>
 
       <ModalBase

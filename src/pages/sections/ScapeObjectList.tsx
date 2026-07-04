@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { ScapeApi } from "../../api/scapeApi";
 import AddScapeRWO from "../modals/AddScapeRWO";
-import { FaMinusCircle } from "react-icons/fa";
+import { CubeIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ScapeObject {
@@ -43,67 +43,66 @@ const ScapeObjectList = ({
   };
   return (
     <div>
-      <div className="flex justify-between items-center">
-        <div className="font-medium text-xl">RWO Objects List</div>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
+          <CubeIcon className="w-5 h-5 text-blue" />
+          RWO Objects List
+          <span className="bg-gray-100 text-gray-600 text-xs font-semibold px-2 py-0.5 rounded-full">
+            {objects.length}
+          </span>
+        </h3>
 
         <AddScapeRWO scapeId={scapeId} fetchScape={fetchScape} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {objects.map((item) => (
-          <div
-            key={item._id}
-            className="mt-4 flex justify-between items-center bg-[#e9eef1] py-2 p-4 rounded-lg cursor-pointer relative"
-          >
-            <div className="absolute top-3 right-2">
-              <FaMinusCircle
+      {objects.length === 0 ? (
+        <p className="text-sm text-gray-500 text-center py-8 border border-dashed border-gray-200 rounded-xl">
+          No objects added yet.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {objects.map((item) => (
+            <div
+              key={item._id}
+              className="relative bg-white border border-gray-100 shadow-sm rounded-2xl p-4 hover:shadow-md transition-shadow"
+            >
+              <button
                 onClick={() => handleRemoveScape(item._id)}
-                className="text-red-500 cursor-pointer"
-              />
-            </div>
+                title="Remove object"
+                className="absolute top-3 right-3 text-red-500 hover:bg-red-50 p-1.5 rounded-full transition-colors"
+              >
+                <TrashIcon className="w-4 h-4" />
+              </button>
 
-            <div className="flex items-center">
-              <img
-                className="object-cover mr-2 w-20 h-20 rounded-lg"
-                src={item.nucleus?.icon?.url}
-                alt=""
-              />
+              <div className="flex items-start gap-3 pr-8">
+                <img
+                  className="object-cover w-14 h-14 rounded-xl border border-gray-100 shrink-0"
+                  src={item.nucleus?.icon?.url}
+                  alt=""
+                />
 
-              <div>
-                <h4 className="font-bold">{item.nucleus.title}</h4>
-                <p className="text-sm text-gray-600">
-                  {item.nucleus.objectDescription}
-                </p>
-                <div>
-                  <p className="text-sm text-gray-600">
-                    Category: {item.nucleus.category}
-                  </p>
-                </div>
-
-                {/* object  */}
-                <div>
-                  <p className="text-sm text-gray-600">
-                    {/* Objects: {getObject(item).} */}
+                <div className="min-w-0">
+                  <h4 className="font-bold text-gray-900 truncate">
+                    {item.nucleus.title}
+                  </h4>
+                  <p className="text-xs text-gray-500 capitalize truncate">
+                    {item.nucleus.category}
                   </p>
 
-                  {/* pin access */}
-                  <p className="text-sm text-gray-600">
-                    Pin Access:
-                    <span className="font-bold ml-1">
-                      {item.pinAccess.toUpperCase()}
+                  <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                    <span className="bg-blue/10 text-blue px-2 py-0.5 rounded-md text-xs font-medium capitalize">
+                      {item.pinAccess}
                     </span>
-                  </p>
-
-                  {/* object function count */}
-                  <p className="text-sm text-gray-600">
-                    Functions Added: {item.objectFunctions.length}
-                  </p>
+                    <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md text-xs font-medium">
+                      {item.objectFunctions.length} Functions
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

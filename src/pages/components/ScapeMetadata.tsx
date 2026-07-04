@@ -85,6 +85,13 @@ const ScapeMetadata = ({ formData, setFormData, setSelectedTab }: Props) => {
     if (formData.admins.length > 0)
       payload.append("admins", JSON.stringify(formData.admins));
     payload.append("objects", JSON.stringify(objects));
+    if (formData.activities.length > 0) {
+      const activities = formData.activities.map((item) => ({
+        activity: item.activity._id,
+        pinAccess: item.pinAccess,
+      }));
+      payload.append("activities", JSON.stringify(activities));
+    }
     if (formData.geometry.coordinates.length) {
       payload.append("geometry", JSON.stringify(formData.geometry));
     }
@@ -278,7 +285,7 @@ const ScapeMetadata = ({ formData, setFormData, setSelectedTab }: Props) => {
           {isLoading ? "Creating..." : "Create Scape"}
         </button>
         <button
-          onClick={() => setSelectedTab("scape_objects")}
+          onClick={() => setSelectedTab("scape_activities")}
           className="bg-white border border-gray-300 text-gray-700 font-bold py-3 rounded-full hover:bg-gray-50 transition-colors block w-full"
         >
           Back
